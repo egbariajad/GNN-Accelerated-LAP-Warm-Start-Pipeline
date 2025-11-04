@@ -44,6 +44,10 @@ Thumbs.db
 *.backup
 github_ssh_key.pub
 
+# SLURM files (cluster-specific)
+*.slurm
+*.sh
+
 # Build artifacts
 build/
 dist/
