@@ -1,0 +1,67 @@
+# Directories to exclude
+anaconda3/
+archive/
+artifacts/
+checkpoints/
+logs/
+results/
+fallback_threshold_results/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Log files
+*.log
+*.err
+
+# Archives
+*.tar.gz
+*.zip
+*.tar
+
+# HDF5 datasets
+*.h5
+*.hdf5
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.so
+
+# Model checkpoints (large files)
+*.pt
+*.pth
+*.ckpt
+
+# Large data files
+*.txt.gz
+data/biogrid/raw/*.txt
+data/string_dataset/raw/*.txt
+
+# Wheel files
+*.whl
+
+# Data buckets
+data/buckets
+data/buckets_raw

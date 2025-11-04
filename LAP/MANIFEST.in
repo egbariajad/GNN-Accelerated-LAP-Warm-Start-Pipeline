@@ -1,0 +1,8 @@
+include *.txt *.md *.in LICENSE
+recursive-include _lapjv_cpp *
+recursive-include lap *
+recursive-include lap/tests *
+global-exclude */__pycache__
+global-exclude *.pyc
+prune .github
+prune benchmark

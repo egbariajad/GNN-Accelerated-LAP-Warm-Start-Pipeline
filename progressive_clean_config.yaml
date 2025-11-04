@@ -1,0 +1,132 @@
+# Clean Dataset Manifest for Progressive Multi-Size Training
+#
+# This manifest defines the training configuration for progressive
+# multi-size GNN training using clean datasets (no dual noise).
+#
+# Training strategy:
+# - Epochs 1-3: Sample from 512, 1536, 2048 only (curriculum warm-up)
+# - Epochs 4+: Include all sizes including 4096 (full curriculum)
+# - Round-robin sampling across sizes for balanced exposure
+
+training:
+  # Training datasets (clean, no dual noise)
+  datasets:
+    - name: small_512
+      path: data/generated/processed_clean/small/full/train.h5
+      size: 512
+      weight: 1.0
+      curriculum_start_epoch: 1  # Available from epoch 1
+      
+    - name: mid_1536
+      path: data/generated/processed_clean/mid_1536/full/train.h5
+      size: 1536
+      weight: 1.0
+      curriculum_start_epoch: 1  # Available from epoch 1
+      
+    - name: mid_2048
+      path: data/generated/processed_clean/mid_2048/full/train.h5
+      size: 2048
+      weight: 1.0
+      curriculum_start_epoch: 1  # Available from epoch 1
+      
+    - name: mid_3072
+      path: data/generated/processed_clean/mid_3072/full/train.h5
+      size: 3072
+      weight: 0.8
+      curriculum_start_epoch: 2  # Add in epoch 2
+      
+    # Excluding large_4096 - dataset not ready yet
+    # - name: large_4096
+    #   path: data/generated/processed_clean/large_4096/full/train.h5
+    #   size: 4096
+    #   weight: 0.6
+    #   curriculum_start_epoch: 4  # Add in epoch 4
+
+validation:
+  # Validation splits for separate evaluation
+  datasets:
+    - name: val_small
+      path: data/generated/processed_clean/small/full/val.h5
+      size: 512
+      
+    - name: val_mid_1536
+      path: data/generated/processed_clean/mid_1536/full/val.h5
+      size: 1536
+      
+    - name: val_mid_2048
+      path: data/generated/processed_clean/mid_2048/full/val.h5
+      size: 2048
+      
+    - name: val_mid_3072
+      path: data/generated/processed_clean/mid_3072/full/val.h5
+      size: 3072
+      
+    # Excluding val_large - dataset not ready yet
+    # - name: val_large
+    #   path: data/generated/processed_clean/large_4096/full/val.h5
+    #   size: 4096
+
+model:
+  architecture: one_gnn
+  hidden_dim: 192
+  layers: 4
+  dropout: 0.1
+  topk: 24
+  row_feat_dim: 21  # full features
+  heads: 4
+
+training_config:
+  epochs: 35
+  min_epochs: 15
+  patience: 8
+  base_batch_size: 32
+  # Adaptive batch sizing
+  batch_size_rules:
+    - max_size: 1024
+      batch_size: 32
+    - max_size: 2048
+      batch_size: 16
+    - max_size: 4096
+      batch_size: 8
+  
+  optimizer:
+    type: AdamW
+    lr: 0.0002  # 2e-4
+    weight_decay: 0.00005  # 5e-5
+    betas: [0.9, 0.999]
+  
+  scheduler:
+    type: warmup_cosine
+    warmup_ratio: 0.1
+    min_lr: 1.0e-6
+  
+  loss_weights:
+    primal_gap: 1.0
+    feasibility: 1.0
+    u_reg: 0.1
+    v_reg: 0.0  # Disabled for now
+  
+  gradient_clip: 1.0
+  amp_enabled: false  # Keep AMP disabled
+
+  # Curriculum learning
+  curriculum:
+    enabled: true
+    warmup_epochs: 3  # First 3 epochs use smaller sizes
+    
+  # Sampling strategy
+  sampling:
+    strategy: round_robin  # or 'weighted_random'
+    batches_per_size: 6  # Aim for ~equal representation
+
+checkpointing:
+  save_best: true
+  save_last: true
+  metric: avg_primal_gap  # Average across validation splits
+  mode: min
+  output_dir: gnn/checkpoints_clean
+  checkpoint_prefix: progressive_clean
+
+logging:
+  log_interval: 10  # Log every 10 batches
+  val_log_per_split: true  # Log metrics separately per validation split
