@@ -26,7 +26,7 @@ Cost matrix C  →  Feature engineering  →  OneGNN (û)  →  v̂ = min(C - û
 
 - **Dual Utilities** (`solvers/advanced_dual.py`, `solvers/dual_computation.py`): Feasibility projection, reduced-cost computation, difference-constraints reconstruction for oracle duals, and validation tools.
 
-- **Dataset Generation** (`data/generate_dataset.py`): Supports synthetic families (uniform, sparse, metric, clustered) and real sources (OR-Library, SuiteSparse, STRING); outputs HDF5 with C, u/v, assignments, and metadata.
+- **Dataset Generation** (`data/generate_dataset.py`): Supports synthetic families (uniform, sparse, metric, clustered); outputs HDF5 with C, u/v, assignments, and metadata.
 
 - **Benchmark Suite** (`scripts/gnn_benchmark.py`, `scripts/comprehensive_gnn_benchmark.py`): Compares SciPy, unseeded LAP, and full pipeline; generates speedup distributions, means by size/dataset, and visualizations. Rigorous timing with repeats and outlier handling.
 
