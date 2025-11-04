@@ -42,6 +42,7 @@ Thumbs.db
 *.tmp
 *.bak
 *.backup
+github_ssh_key.pub
 
 # Build artifacts
 build/
@@ -58,6 +59,7 @@ dist/
 *.txt.gz
 data/biogrid/raw/*.txt
 data/string_dataset/raw/*.txt
+data/*/raw/
 
 # Wheel files
 *.whl
@@ -65,3 +67,10 @@ data/string_dataset/raw/*.txt
 # Data buckets
 data/buckets
 data/buckets_raw
+
+# Status and temporary docs
+*_STATUS*.md
+*_RESULTS*.md
+*_SUCCESS.txt
+OPTION_C_*.txt
+QUICK_REFERENCE.txt
