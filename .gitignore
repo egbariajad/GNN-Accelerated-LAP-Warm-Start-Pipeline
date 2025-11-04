@@ -4,8 +4,11 @@ archive/
 artifacts/
 checkpoints/
 logs/
-results/
 fallback_threshold_results/
+
+# Results directories (but keep res/ for result images)
+results/
+!res/
 
 # Python
 __pycache__/
